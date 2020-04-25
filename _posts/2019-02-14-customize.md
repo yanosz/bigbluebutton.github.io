@@ -2,7 +2,7 @@
 layout: page
 title: "Customize"
 category: 2.2
-redirect_from: 
+redirect_from:
   - /admin/client-configuration.html
 date: 2019-02-14 22:13:42
 ---
@@ -42,11 +42,13 @@ swfSlidesRequired=false
 
 The SWF files are not needed by the HTML5 client.
 
-## Restrict access to specific ports
+## Secure your system -- restrict access to specific ports
 
-If your server is behind a firewall already -- such as running within your company or on an EC2 instance behind a Amazon Security Group -- and the firewall is enforcing the above restrictions, you don't a second firewall and can skip this section.
+Configuring IP firewalling is *essential for securing your installation*. By default, many services are reachable across the network. This allows BigBlueButton operate in clusters and private data center networks -- but it creates a significant attack surface, if your BigBlueButton server is publicly available on the internet.
 
-If your BigBlueButton server is publicly available on the internet, then, for increased security, you should restrict access only to the following needed ports:
+If your server is behind a firewall already -- such as running within your company or on an EC2 instance behind a Amazon Security Group -- and the firewall is enforcing the above restrictions, you don't need a second firewall and can skip this section.
+
+BigBlueButton comes with a [UFW](https://launchpad.net/ufw) based ruleset. It it can be applied on restart (c.f. [Automatically apply configuration changes on restart](#automatically-apply-configuration-changes-on-restart)) and restricts access only to the following needed ports:
 
 * TCP/IP port 22 for SSH
 * TCP/IP port 80 for HTTP
@@ -72,6 +74,8 @@ ufw --force enable
 ```
 
 These `ufw` firewall rules will be automatically re-applied on server reboot.
+
+Besides IP-based firewalling, web application firewalls such as [ModSecurity](https://modsecurity.org/)  provide additional security by checking requests to various web-based components.
 
 ## Extract the shared secret
 
@@ -305,7 +309,7 @@ You an have the BigBlueButton server automatically remove the raw data for a rec
 #remove_raw_of_published_recordings
 ```
 
-The default duration (days) 
+The default duration (days)
 
 ```bash
 published_days=14
@@ -401,7 +405,7 @@ When you create `apply-config.sh`, make it executable (`chmod +x /etc/bigbluebut
 Restarting BigBlueButton 2.2.0-xx-x ...
 Stopping BigBlueButton
 
-Applying updates in /etc/bigbluebutton/bbb-conf/apply-config.sh: 
+Applying updates in /etc/bigbluebutton/bbb-conf/apply-config.sh:
   - Enable Firewall and opening 22/tcp, 80/tcp, 443/tcp and 16384:32768/udp
 Rules updated
 Rules updated (v6)
@@ -488,7 +492,7 @@ echo "  - Update TURN server configuration turn-stun-servers.xml"
 
 ### Always record every meeting
 
-To [always record every meeting](#always-record-every-meeting), add the following to `apply-config.sh`. 
+To [always record every meeting](#always-record-every-meeting), add the following to `apply-config.sh`.
 
 ```bash
 echo "  - Prevent viewers from sharing webcams"
@@ -782,7 +786,7 @@ You can remove this sound for all users by editing `/opt/freeswitch/etc/freeswit
 
 ## Reduce bandwidth from webcams
 
-You can use a banwidth usage on your BigBlueButton server using a tool such as `bmon` (`sudo apt-get install bmon`).  You can change the maximum bandwidth settings for each webcam options (low, medium, high, high definition) by editing `/usr/share/meteor/bundle/programs/server/assets/app/config/settings.yml` and modifying the entries for 
+You can use a banwidth usage on your BigBlueButton server using a tool such as `bmon` (`sudo apt-get install bmon`).  You can change the maximum bandwidth settings for each webcam options (low, medium, high, high definition) by editing `/usr/share/meteor/bundle/programs/server/assets/app/config/settings.yml` and modifying the entries for
 
 ```yaml
     cameraProfiles:
@@ -889,7 +893,7 @@ To change the title, edit `settings.yml` and change the entry for `public.app.cl
 
 ```yaml
 public:
-  app: 
+  app:
     ...
     clientTitle: BigBlueButton
 ```
@@ -915,7 +919,7 @@ The client logger accepts three targets for the logs: `console`, `server` and `e
 | url    | -             | -                                | The end point where logs will be sent to when the target is set to "external".                          |
 | method | -             | "POST", "PUT"                    | HTTP method being used when using the target "external".                                                |
 
-The default values are: 
+The default values are:
 
 ```yaml
   clientLog:
